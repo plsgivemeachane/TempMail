@@ -55,16 +55,7 @@ const getEmails = (req,res) => {
           f.once('end', () => {
             console.log('Done fetching all messages!');
             imap.end();
-            if(isMailer == false){
-              if(arrOfMail.length != 0){
-                res.send({
-                  sub : arrOfMail[arrOfMail.length-1].headers.get('subject'),
-                  html : arrOfMail[arrOfMail.length-1].html,
-                  from : arrOfMail[arrOfMail.length-1].headers.get('from').text
-                })
-              }
-              isMailer = true
-            }
+            
             // try{
             //   res.send("Nothings.")
             //   return;
@@ -83,6 +74,16 @@ const getEmails = (req,res) => {
 
     imap.once('end', () => {
       console.log('Connection ended');
+      if(isMailer == false){
+        if(arrOfMail.length != 0){
+          res.send({
+            sub : arrOfMail[arrOfMail.length-1].headers.get('subject'),
+            html : arrOfMail[arrOfMail.length-1].html,
+            from : arrOfMail[arrOfMail.length-1].headers.get('from').text
+          })
+        }
+        isMailer = true
+      }
     });
 
     imap.connect();
