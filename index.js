@@ -16,6 +16,7 @@ const getEmails = (req,res) => {
   isMailer = false
   try {
     const imap = new Imap(imapConfig);
+    try{
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
         imap.search(['UNSEEN', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
@@ -87,6 +88,9 @@ const getEmails = (req,res) => {
     imap.connect();
   } catch (ex) {
     console.log('an error occurred');
+  }
+  } catch(e){
+    //pass
   }
 };
 
