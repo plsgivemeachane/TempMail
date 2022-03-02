@@ -20,7 +20,7 @@ const getEmails = (req,res) => {
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
         imap.search(['NEW', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
-          if(err){
+          if(err || !results || results.length == 0){
             res.send({
               sub:"Nothings...",
               html:"<h1>Nothings in your mail</h1>",
