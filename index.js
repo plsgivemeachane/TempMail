@@ -14,7 +14,7 @@ const imapConfig = {
 
 const getEmails = (req,res) => {
   isMailer = false
-  var arrOfMail = []
+  var lastMail = null
   try {
     const imap = new Imap(imapConfig);
     try{
@@ -40,7 +40,7 @@ const getEmails = (req,res) => {
                   console.log(parsed.headers.get('subject'));
                   console.log(parsed.headers.get('from').text);
                   console.log(parsed.html)
-                  arrOfMail.push(parsed)
+                  lastMail = parsed
                   
                 }
                 /* Make API call to save the data
@@ -76,11 +76,11 @@ const getEmails = (req,res) => {
     imap.once('end', () => {
       console.log('Connection ended');
       if(isMailer == false){
-        if(arrOfMail.length != 0){
+        if(lastMail){
           res.send({
-            sub : arrOfMail[arrOfMail.length-1].headers.get('subject'),
-            html : arrOfMail[arrOfMail.length-1].html,
-            from : arrOfMail[arrOfMail.length-1].headers.get('from').text
+            sub : lastMail.headers.get('subject'),
+            html : lastMail.html,
+            from : lastMail.headers.get('from').text
           })
         }
         isMailer = true
