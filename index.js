@@ -19,7 +19,7 @@ const getEmails = (req,res) => {
     try{
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
-        imap.search(['UNSEEN', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
+        imap.search(['NEW', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
           if(err){
             res.send({
               sub:"Nothings...",
