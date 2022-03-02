@@ -27,6 +27,7 @@ const getEmails = (req,res) => {
               html:"<h1>Nothings in your mail</h1>",
               from:"Admin@gmail.com"
             })
+            isMailer = true
           } else {
           var arrOfMail = []
           const f = imap.fetch(results, {bodies: ''});
