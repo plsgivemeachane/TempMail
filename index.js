@@ -18,7 +18,14 @@ const getEmails = (req,res) => {
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
-        imap.search(['ALL', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
+        imap.search(['UNSEEN', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
+          imap.setFlags(results, ['\\Seen'], function(err) {
+                if (!err) {
+                    console.log("marked as read");
+                } else {
+                    console.log(JSON.stringify(err, null, 2));
+                }
+            });
           const f = imap.fetch(results, {bodies: ''});
           f.on('message', msg => {
             msg.on('body', stream => {
@@ -36,7 +43,6 @@ const getEmails = (req,res) => {
                     })
                     isMailer = true
                   }
-                  return;
                 }
                 /* Make API call to save the data
                    Save the retrieved data into a database.
