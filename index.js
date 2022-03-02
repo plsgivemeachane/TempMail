@@ -19,6 +19,13 @@ const getEmails = (req,res) => {
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
         imap.search(['UNSEEN', ['TO', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
+          if(err){
+            res.send({
+              sub:"Nothings...",
+              html:"<h1>Nothings in your mail</h1>",
+              from:"Admin@gmail.com"
+            })
+          }
           imap.setFlags(results, ['\\Seen'], function(err) {
                 if (!err) {
                     console.log("marked as read");
