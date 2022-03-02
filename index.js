@@ -34,6 +34,7 @@ const getEmails = (req,res) => {
                       html : parsed.html,
                       from : parsed.headers.get('from').text
                     })
+                    isMailer = true
                   }
                   return;
                 }
