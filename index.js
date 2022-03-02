@@ -14,6 +14,7 @@ const imapConfig = {
 
 const getEmails = (req,res) => {
   isMailer = false
+  var arrOfMail = []
   try {
     const imap = new Imap(imapConfig);
     try{
@@ -29,7 +30,7 @@ const getEmails = (req,res) => {
             })
             isMailer = true
           } else {
-          var arrOfMail = []
+          
           const f = imap.fetch(results, {bodies: ''});
           f.on('message', msg => {
             msg.on('body', stream => {
