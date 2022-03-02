@@ -27,13 +27,7 @@ const getEmails = (req,res) => {
               from:"Admin@gmail.com"
             })
           } else {
-          imap.setFlags(results, ['\\Seen'], function(err) {
-                if (!err) {
-                    console.log("marked as read");
-                } else {
-                    console.log(JSON.stringify(err, null, 2));
-                }
-            });
+          
           const f = imap.fetch(results, {bodies: ''});
           f.on('message', msg => {
             msg.on('body', stream => {
