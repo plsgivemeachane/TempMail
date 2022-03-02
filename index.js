@@ -13,6 +13,7 @@ const imapConfig = {
 
 
 const getEmails = (req,res) => {
+  isMailer = false
   try {
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
@@ -27,11 +28,13 @@ const getEmails = (req,res) => {
                   console.log(parsed.headers.get('subject'));
                   console.log(parsed.headers.get('from').text);
                   console.log(parsed.html)
-                  res.send({
-                    sub : parsed.headers.get('subject'),
-                    html : parsed.html,
-                    from : parsed.headers.get('from').text
-                  })
+                  if(isMailer == false){
+                    res.send({
+                      sub : parsed.headers.get('subject'),
+                      html : parsed.html,
+                      from : parsed.headers.get('from').text
+                    })
+                  }
                   return;
                 }
                 /* Make API call to save the data
