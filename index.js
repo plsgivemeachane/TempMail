@@ -18,7 +18,7 @@ const getEmails = (req,res) => {
     const imap = new Imap(imapConfig);
     imap.once('ready', () => {
       imap.openBox('INBOX', false, () => {
-        imap.search(['ALL', ['SINCE', new Date()]], (err, results) => {
+        imap.search(['ALL', ['FROM', "onenew553+"+req.params.id+"@gmail.com"]], (err, results) => {
           const f = imap.fetch(results, {bodies: ''});
           f.on('message', msg => {
             msg.on('body', stream => {
