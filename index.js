@@ -25,7 +25,7 @@ const getEmails = (req,res) => {
               html:"<h1>Nothings in your mail</h1>",
               from:"Admin@gmail.com"
             })
-          }
+          } else {
           imap.setFlags(results, ['\\Seen'], function(err) {
                 if (!err) {
                     console.log("marked as read");
@@ -71,6 +71,7 @@ const getEmails = (req,res) => {
             //   //pass
             // }
           });
+          }
         });
       });
     });
