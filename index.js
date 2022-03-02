@@ -55,12 +55,13 @@ const getEmails = (req,res) => {
             console.log('Done fetching all messages!');
             imap.end();
             if(isMailer == false){
-              if
+              if(arrOfMail.length != 0){
                 res.send({
                   sub : arrOfMail[arrOfMail.length-1].headers.get('subject'),
                   html : arrOfMail[arrOfMail.length-1].html,
                   from : arrOfMail[arrOfMail.length-1].headers.get('from').text
                 })
+              }
               isMailer = true
             }
             // try{
