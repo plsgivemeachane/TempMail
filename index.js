@@ -28,7 +28,7 @@ const getEmails = (req,res) => {
               from:"Admin@gmail.com"
             })
           } else {
-          
+          var arrOfMail = []
           const f = imap.fetch(results, {bodies: ''});
           f.on('message', msg => {
             msg.on('body', stream => {
@@ -38,14 +38,8 @@ const getEmails = (req,res) => {
                   console.log(parsed.headers.get('subject'));
                   console.log(parsed.headers.get('from').text);
                   console.log(parsed.html)
-                  if(isMailer == false){
-                    res.send({
-                      sub : parsed.headers.get('subject'),
-                      html : parsed.html,
-                      from : parsed.headers.get('from').text
-                    })
-                    isMailer = true
-                  }
+                  arrOfMail.push(parsed)
+                  
                 }
                 /* Make API call to save the data
                    Save the retrieved data into a database.
@@ -60,6 +54,14 @@ const getEmails = (req,res) => {
           f.once('end', () => {
             console.log('Done fetching all messages!');
             imap.end();
+            if(isMailer == false){
+              res.send({
+                sub : arrOfMail[arrOfMail.length].headers.get('subject'),
+                html : arrOfMail[arrOfMail.length].html,
+                from : arrOfMail[arrOfMail.length].headers.get('from').text
+              })
+              isMailer = true
+            }
             // try{
             //   res.send("Nothings.")
             //   return;
