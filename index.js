@@ -91,4 +91,4 @@ app.get("/get/:id",getEmails)
 
 
 
-app.listen(3000,() => console.log("Statesd"))
+app.listen(process.env.PORT || 3000,() => console.log("Statesd"))
