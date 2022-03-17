@@ -2,6 +2,7 @@ const Imap = require('imap');
 const Sentry = require('@sentry/node');
 const Tracing = require("@sentry/tracing");
 const {simpleParser} = require('mailparser');
+const http = require("http");
 const imapConfig = {
   user: 'onenew553@gmail.com',
   password: 'lbfufgyqbtoovxmr',
@@ -124,6 +125,35 @@ Sentry.init({
 app.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
+
+
+const transaction = Sentry.startTransaction({
+  op: "transaction",
+  name: "My Transaction",
+});
+
+// Note that we set the transaction as the span on the scope.
+// This step makes sure that if an error happens during the lifetime of the transaction
+// the transaction context will be attached to the error event
+Sentry.configureScope(scope => {
+  scope.setSpan(transaction);
+});
+
+let request;
+
+try {
+  // this should generate an http span
+  request = http.get("http://sentry.io", res => {
+    console.log(`STATUS: ${res.statusCode}`);
+    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+  });
+} catch (err) {
+  Sentry.captureException(err);
+}
+
+request.on("close", () => {
+  transaction.finish();
+})
 
 
 app.use(cors({
